@@ -28,11 +28,11 @@ class UserServiceImplTest {
 
         final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
-        final User USER_IN_DB = new User(1L, "Admin",
+        final User USER_ID_DB = new User(1L, "Admin",
                 "Admin", "Admin", LocalDate.parse("22.02.2022", DATE_FORMAT),
                 "admin@admin.com", "89999999999", null);
 
-        final UserDTO USER_DTO = new UserDTO(1L, "User",
+        final UserDTO USER_DTO = new UserDTO(null, "User",
                 "User", "User", "22.03.2021",
                 "user@user.com", "87777777777", null);
 
@@ -91,8 +91,6 @@ class UserServiceImplTest {
 
         UserDTO createdUser = userService.createUser(USER_DTO, FILE);
 
-        createdUser.setId(1L);
-
         Assertions.assertEquals(USER_DTO.getId(), createdUser.getId());
         Assertions.assertEquals(USER_DTO.getFirstName(), createdUser.getFirstName());
         Assertions.assertEquals(USER_DTO.getSecondName(), createdUser.getSecondName());
@@ -104,14 +102,17 @@ class UserServiceImplTest {
 
     @Test
     void updateUser() {
-        Mockito.doReturn(USER_IN_DB)
+        Mockito.doReturn(USER_ID_DB)
                 .when(userRepo)
                 .getById(1L);
 
         Mockito.when(userRepo.save(Mockito.any(User.class)))
                 .thenAnswer(i -> i.getArguments()[0]);
 
-        UserDTO updatedUser = userService.updateUser(USER_DTO, FILE);
+        UserDTO userDTO = USER_DTO;
+        userDTO.setId(1L);
+
+        UserDTO updatedUser = userService.updateUser(userDTO, FILE);
 
         Assertions.assertEquals(USER_DTO.getId(), updatedUser.getId());
         Assertions.assertEquals(USER_DTO.getFirstName(), updatedUser.getFirstName());
