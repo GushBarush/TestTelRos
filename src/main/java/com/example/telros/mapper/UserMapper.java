@@ -22,6 +22,7 @@ public interface UserMapper {
     User toEntity(UserDTO source);
 
     @Mapping(target = "imageBase64", source = "image", qualifiedByName = "toDtoImageResolver")
+    @Mapping(target = "dataOfBirth", source = "dataOfBirth", qualifiedByName = "toDotDateResolver")
     UserDTO toDto(User source);
     List<UserDTO> toDto(List<User> source);
 
@@ -44,5 +45,15 @@ public interface UserMapper {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
         return LocalDate.parse(date, format);
+    }
+
+    /**
+     * конвертация LocalDate в текстовое представление формата dd.MM.yyyy
+     */
+    @Named("toDotDateResolver")
+    static String toDotDateResolver(LocalDate date) {
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+
+        return date.format(format);
     }
 }

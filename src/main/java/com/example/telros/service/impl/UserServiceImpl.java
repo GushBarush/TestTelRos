@@ -83,9 +83,7 @@ public class UserServiceImpl implements UserService {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         byte[] imageByte = getImageBytes(image);
 
-        User user = userRepo.findById(userDTO.getId())
-                .orElseThrow(() -> new RuntimeException("Пользователь не найден: " + userDTO.getId()));
-
+        User user = userRepo.getById(userDTO.getId());
 
         //  Проверяем поля на наличие изменений
         if (userDTO.getFirstName() != null)
@@ -108,14 +106,9 @@ public class UserServiceImpl implements UserService {
         return userMapper.toDto(user);
     }
 
-    /**
-     * @param userId получаем id пользователя
-     * в случае ошибки пори удалении возвращаем RuntimeException с тектом ошибки
-     */
     @Override
-    public void deleteUser(Long userId) throws RuntimeException {
-        User user = userRepo.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Пользователь не найден: " + userId));
+    public void deleteUser(Long userId) {
+        User user = userRepo.getById(userId);
 
         userRepo.delete(user);
     }

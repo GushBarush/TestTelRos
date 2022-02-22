@@ -23,7 +23,7 @@ public class UserController {
 
     /**
      * @return возвращение списка всех пользователей
-     * в случае если пользователей нету возвращается пустрой список
+     * в случае если пользователей нету возвращается пустой список
      */
     @GetMapping
     public List<UserDTO> getAllUsers() {
@@ -97,8 +97,8 @@ public class UserController {
         try {
             userService.deleteUser(userId);
             return ResponseEntity.status(HttpStatus.OK).build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(e.getMessage());
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
         }
     }
 }
