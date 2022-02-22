@@ -17,7 +17,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        super.configure(http);
+        http.csrf().disable()
+                .httpBasic()
+                .and()
+                .authorizeRequests()
+                .anyRequest().authenticated();
     }
 
     @Bean
@@ -25,6 +29,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder(5);
     }
 
+    /**
+     * создание пользователя admin:admin в памяти
+     */
     @Bean
     @Override
     protected UserDetailsService userDetailsService() {

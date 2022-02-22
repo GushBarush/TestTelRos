@@ -12,7 +12,7 @@ public interface UserService {
 
     Optional<UserDTO> getUserById(Long userId);
 
-    boolean deleteUser(Long userId);
+    void deleteUser(Long userId);
 
     UserDTO createUser(UserDTO userDTO, MultipartFile image);
 

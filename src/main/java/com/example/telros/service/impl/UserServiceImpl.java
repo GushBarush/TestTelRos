@@ -11,6 +11,8 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,50 +41,88 @@ public class UserServiceImpl implements UserService {
                 .map(userMapper::toDto);
     }
 
+    /**
+     * @param userDTO примипаем пользователя
+     * @param image примимаем MultipartFile с фотографией
+     * @return при успешном создании пользоватеся возвращаем пользователя
+     * в случае ошибки возвращаем RuntimeException с тектом ошибки
+     */
     @Override
-    public UserDTO createUser(UserDTO userDTO, MultipartFile image) {
+    public UserDTO createUser(UserDTO userDTO, MultipartFile image) throws RuntimeException {
         byte[] imageByte = getImageBytes(image);
+
+        if (userDTO.getFirstName() == null)
+            throw  new RuntimeException("Имя не может быть пустым");
+        if (userDTO.getSecondName() == null)
+            throw  new RuntimeException("Фамилия не божет быть пустой");
+        if (userDTO.getMiddleName() == null)
+            throw  new RuntimeException("Отчество не может быть пустым");
+        if (userDTO.getDataOfBirth() == null)
+            throw  new RuntimeException("Дата рождения не может быть пустой");
+        if (userDTO.getPhoneNumber() == null)
+            throw  new RuntimeException("Номер телефона не может быть пустым");
+        if (userDTO.getEmail() == null)
+            throw  new RuntimeException("Email не может быть пустым");
 
         User user = userMapper.toEntity(userDTO);
-        user.setUserImage(imageByte);
-
+        user.setImage(imageByte);
         user = userRepo.save(user);
 
         return userMapper.toDto(user);
     }
 
+    /**
+     * @param userDTO примипаем пользователя
+     * @param image примимаем MultipartFile с фотографией
+     * проверяем все поля на изменения
+     * @return при успешном обновлении пользоватеся возвращаем пользователя
+     * в случае ошибки возвращаем RuntimeException с тектом ошибки
+     */
     @Override
     public UserDTO updateUser(UserDTO userDTO, MultipartFile image) throws RuntimeException {
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         byte[] imageByte = getImageBytes(image);
 
-        User user = userRepo.findById(userDTO.getUserId())
-                .orElseThrow(() -> new RuntimeException("Пользователь не найден: " + userDTO.getUserId()));
+        User user = userRepo.findById(userDTO.getId())
+                .orElseThrow(() -> new RuntimeException("Пользователь не найден: " + userDTO.getId()));
 
-        if (userDTO.getUserFirstName() != null) // проверяем Имя
-            user.setUserFirstName(userDTO.getUserFirstName());
-        if (userDTO.getUserSecondName() != null) // проверяем Фамилию
-            user.setUserSecondName(userDTO.getUserSecondName());
-        if (userDTO.getUserMiddleName() != null) // проверяем Отчество
-            user.setUserMiddleName(userDTO.getUserMiddleName());
-        if (userDTO.getUserDOB() != null) // проверям дату рождения
-            user.setUserDOB(userDTO.getUserDOB());
-        if (userDTO.getUserEmail() != null) // проверяем email
-            user.setUserEmail(userDTO.getUserEmail());
-        if (userDTO.getUserPhoneNumber() != null) // проверяем номер телефона
-            user.setUserPhoneNumber(userDTO.getUserPhoneNumber());
-        if (imageByte != null) // проверяем фотографию
-            user.setUserImage(imageByte);
+
+        //  Проверяем поля на наличие изменений
+        if (userDTO.getFirstName() != null)
+            user.setFirstName(userDTO.getFirstName());
+        if (userDTO.getSecondName() != null)
+            user.setSecondName(userDTO.getSecondName());
+        if (userDTO.getMiddleName() != null)
+            user.setMiddleName(userDTO.getMiddleName());
+        if (userDTO.getDataOfBirth() != null)
+            user.setDataOfBirth(LocalDate.parse(userDTO.getDataOfBirth(), format));
+        if (userDTO.getEmail() != null)
+            user.setEmail(userDTO.getEmail());
+        if (userDTO.getPhoneNumber() != null)
+            user.setPhoneNumber(userDTO.getPhoneNumber());
+        if (imageByte != null)
+            user.setImage(imageByte);
 
         user = userRepo.save(user);
 
         return userMapper.toDto(user);
     }
 
+    /**
+     * @param userId получаем id пользователя
+     * в случае ошибки пори удалении возвращаем RuntimeException с тектом ошибки
+     */
     @Override
-    public boolean deleteUser(Long userId) {
-        return userRepo.deleteUserByUserId(userId);
+    public void deleteUser(Long userId) throws RuntimeException {
+        User user = userRepo.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Пользователь не найден: " + userId));
+
+        userRepo.delete(user);
     }
 
+    /**
+     * получение из MultipartFile image массива byte
+     */
     private byte[] getImageBytes(MultipartFile image) {
         if (image == null)
             return null;

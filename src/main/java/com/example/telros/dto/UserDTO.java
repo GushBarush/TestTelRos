@@ -5,27 +5,46 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 public class UserDTO {
 
-    private Long userId;
+    private Long id;
 
-    private String userFirstName; //Имя
+    /**
+     * Имя
+     */
+    private String firstName;
 
-    private String userSecondName; //Фамилия
+    /**
+     * Фамилия
+     */
+    private String secondName;
 
-    private String userMiddleName; //Отчество
+    /**
+     * Отчество
+     */
+    private String middleName;
 
-    private LocalDate userDOB; // Data of Birth, Дата рождения
+    /**
+     * Data of Birth, Дата рождения
+     */
+    private String dataOfBirth;
 
-    private String userEmail; // Электронная почта
+    /**
+     * Электронная почта
+     */
+    private String email;
 
-    private String userPhoneNumber; // Номер телефона
+    /**
+     * Номер телефона
+     */
+    private String phoneNumber;
 
-    private String imageBase64; // Фотограифия в формате Base64
+    /**
+     * Фотограифия в формате Base64
+     */
+    private String imageBase64;
 }

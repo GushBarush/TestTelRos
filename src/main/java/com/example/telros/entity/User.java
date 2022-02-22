@@ -1,6 +1,7 @@
 package com.example.telros.entity;
 
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -15,28 +16,50 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @Column(name = "user_id")
+    private Long Id;
 
-    @Column(name = "user_first_name", nullable = false)
-    private String userFirstName; //Имя
+    /**
+     * Имя
+     */
+    @Column(name = "user_first_name")
+    private String firstName;
 
-    @Column(name = "user_second_name", nullable = false)
-    private String userSecondName; //Фамилия
+    /**
+     * Фамилия
+     */
+    @Column(name = "user_second_name")
+    private String secondName;
 
-    @Column(name = "user_middle_name", nullable = false)
-    private String userMiddleName; //Отчество
+    /**
+     * Отчество
+     */
+    @Column(name = "user_middle_name")
+    private String middleName;
 
-    @Column(name = "user_dob", nullable = false)
-    private LocalDate userDOB; // Data of Birth, Дата рождения
+    /**
+     * Data of Birth, Дата рождения
+     */
+    @Column(name = "user_dob")
+    private LocalDate dataOfBirth;
 
-    @Column(name = "user_email", nullable = false)
-    private String userEmail; // Электронная почта
+    /**
+     * Электронная почта
+     */
+    @Column(name = "user_email")
+    private String email;
 
-    @Column(name = "user_phone_number", nullable = false)
-    private String userPhoneNumber; // Номер телефона
+    /**
+     * Номер телефона
+     */
+    @Column(name = "user_phone_number")
+    private String phoneNumber;
 
-    @Lob
+    /**
+     * Фотограифия в массиве byte
+     */
     @Column(name = "image_byte")
-    private byte[] userImage; // Фотограифия в массиве byte
+    @Lob
+    @Type(type = "org.hibernate.type.BinaryType")
+    private byte[] image;
 }
