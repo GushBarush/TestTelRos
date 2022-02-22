@@ -72,14 +72,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/1",
+					"raw": "http://localhost:8080/10",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"1"
+						"10"
 					]
 				}
 			},
@@ -118,7 +118,7 @@
 							"key": "image",
 							"contentType": "multipart/form-data",
 							"type": "file",
-							"src": []
+							"src": "/C:/Users/GUSH/Downloads/20200908171549-5386.jpg"
 						}
 					]
 				},
