@@ -1,4 +1,4 @@
-# TestTelRos
+# Test Telros Soft
 Тестовое задание компании TelRos
 
 ﻿Тестовое задание на позицию Java Backend разработчика.
